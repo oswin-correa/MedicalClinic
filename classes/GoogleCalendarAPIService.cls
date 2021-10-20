@@ -1,5 +1,5 @@
 //Google Calendar API Service
-public with sharing class GoogleCalendarAPIService {
+public class GoogleCalendarAPIService {
     private static final GoogleAPISettings__c GOOGLE_API = GoogleAPISettings__c.getOrgDefaults();
     
     //Authorization
@@ -38,8 +38,7 @@ public with sharing class GoogleCalendarAPIService {
                                                             FROM Contact
                                                             Where Email =: email
                                                             AND RecordType.DeveloperName = 'Physician'
-                                                            AND Calendar_Shared__c  = false
-                                                            WITH SECURITY_ENFORCED]); 
+                                                            AND Calendar_Shared__c  = false]); 
                 for(Contact objCon : contacts){
                     objCon.Calendar_Shared__c = true;                      
                 }
