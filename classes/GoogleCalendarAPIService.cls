@@ -1,5 +1,8 @@
-public class GoogleCalendarAPIService {
+//Google Calendar API Service
+public with sharing class GoogleCalendarAPIService {
     private static final GoogleAPISettings__c GOOGLE_API = GoogleAPISettings__c.getOrgDefaults();
+    
+    //Authorization
     public static Boolean getToken(String email,String code){
         Boolean isSuccess = false;
         try{
@@ -35,7 +38,8 @@ public class GoogleCalendarAPIService {
                                                             FROM Contact
                                                             Where Email =: email
                                                             AND RecordType.DeveloperName = 'Physician'
-                                                            AND Calendar_Shared__c  = false]); 
+                                                            AND Calendar_Shared__c  = false
+                                                            WITH SECURITY_ENFORCED]); 
                 for(Contact objCon : contacts){
                     objCon.Calendar_Shared__c = true;                      
                 }
@@ -50,6 +54,8 @@ public class GoogleCalendarAPIService {
         
         return isSuccess;
     }
+    
+    //Fetch refresh token
     public static CalenderAuthSettings__c getRefreshToken(CalenderAuthSettings__c obj){
         
         try{
@@ -88,6 +94,7 @@ public class GoogleCalendarAPIService {
         return obj;        
     }
     
+    //Fetch events
     public static List<Map<String,Object>> getEvents(CalenderAuthSettings__c obj,String contextDate,String nextDate){
         
         List<Map<String,Object>> events = new List<Map<String,Object>>();
@@ -139,6 +146,8 @@ public class GoogleCalendarAPIService {
         }
         return events;
     }
+    
+    //Create event
     public static Boolean createEvent(CalenderAuthSettings__c obj,String patientId,String physicianId,String startTime,String endTime){
         
         Boolean isSuccess = false;
@@ -151,7 +160,7 @@ public class GoogleCalendarAPIService {
             httpReq.setTimeout(120000);
             httpReq.setHeader('Content-Type', 'application/json');
             httpReq.setHeader('Authorization', 'Bearer '+ obj.Token__c);
-            Contact objPatient = [SELECT Id,Email FROM Contact WHERE Id =: patientId][0];
+            Contact objPatient = [SELECT Id,Email FROM Contact WHERE Id =: patientId WITH SECURITY_ENFORCED][0];
             
             String body = '{"summary": "Appointment scheduled at Medical Clinic",'+
                 '"location": "Medical Clinic",'+
@@ -170,7 +179,7 @@ public class GoogleCalendarAPIService {
                 isSuccess = true;
             }
             else{
-                Contact objPhy = [SELECT Id,Specialization__c  FROM Contact WHERE Id =: physicianId][0];
+                Contact objPhy = [SELECT Id,Specialization__c  FROM Contact WHERE Id =: physicianId WITH SECURITY_ENFORCED][0];
                 Appointment__c  objApp =  new Appointment__c (Physician__c  = objPhy.Id,
                                                               Patient__c   = objPatient.Id,
                                                               Specialization__c  = objPhy.Specialization__c,

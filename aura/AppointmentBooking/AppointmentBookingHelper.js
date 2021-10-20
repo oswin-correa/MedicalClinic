@@ -3,7 +3,7 @@
         
         var action = component.get("c.getPhysicians");
         action.setCallback(this, function(response) {
-            console.log(response.getReturnValue());
+            
             if (response.getState() === "SUCCESS") {
                 component.set('v.physicians',response.getReturnValue());
                 this.handlePhysicians(component);
@@ -19,7 +19,6 @@
         let phy = component.find("Physician__c").get('v.value');
         let patient = component.find("Patient__c").get('v.value');
         let date = String(component.find("Date__c").get('v.value'));
-        console.log(patient);
         
         if($A.util.isEmpty(date) || $A.util.isEmpty(phy) || $A.util.isEmpty(patient)){
             
@@ -32,7 +31,6 @@
             let selectPhy = component.get('v.physicians')[phy];
             component.find("Specialization__c").set('v.value',selectPhy.Specialization__c);
             component.set('v.selectedPhysician',selectPhy);
-            console.log(selectPhy);
             $A.util.removeClass(calendar, 'slds-hide');
         }
 
@@ -51,7 +49,6 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 
-                console.log(response.getReturnValue());
                 let calendar  = $('#calendar').fullCalendar('getCalendar');
                 if(!calendar){
                     
@@ -131,11 +128,8 @@
                           endTime: String(end.format())});
         
         action.setCallback(this, function(response) {
-            console.log(response.getReturnValue());
-            if (response.getState() === "SUCCESS") {
-                //alert('Appointment booked at: ' + start.format("h(:mm)a"));
-            }else{
-                console.log(response.getError())
+            if (response.getState() != "SUCCESS") {
+                console.log(response.getError());
             }
         });
         $A.enqueueAction(action);
