@@ -1,0 +1,48 @@
+<aura:component controller="AppointmentBookingController" implements="force:appHostable">
+    
+    <aura:attribute type="String" name="date" />
+    <aura:attribute type="String" name="patient" />
+    <aura:attribute type="Object" name="physicians" />
+    <aura:attribute type="Object" name="selectedPhysician" />
+    
+    <ltng:require
+        styles="{!$Resource.FullCalendar   + '/fullcalendar.min.css'}"
+        scripts="{!join(',',
+                           $Resource.FullCalendar  + '/jquery.min.js',
+                           $Resource.FullCalendar  + '/moment.min.js',
+                           $Resource.FullCalendar  + '/theme.js',
+                           $Resource.FullCalendar  + '/fullcalendar.min.js')}"
+    />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <lightning:recordEditForm objectApiName="Appointment__c">
+        <lightning:layout multipleRows="true" class="background">
+            <lightning:layoutItem size="2" padding="around-small">
+                <lightning:input type="date" aura:id="Date__c" label="Date" value="{!v.date}" onchange="{!c.handleFetchEvents}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2" padding="around-small">
+                <lightning:inputField aura:id="Patient__c" fieldName="Patient__c" value="{!v.patient}" disabled="{!empty(v.date)}" onchange="{!c.handleFetchEvents}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2" padding="around-small">
+                <lightning:inputField aura:id="Specialization__c" fieldName="Specialization__c" disabled="{!empty(v.date)|| empty(v.patient)}" onchange="{!c.handlePhysicians}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2" padding="around-small">
+                <lightning:combobox label="Physician" aura:id="Physician__c" disabled="{!empty(v.date) || empty(v.patient)}" onchange="{!c.handleFetchEvents}" />
+            </lightning:layoutItem>
+            <lightning:layoutItem size="2" padding="around-small">
+                <aura:if isTrue="{!not(empty(v.selectedPhysician))}">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="form-element-01">Price</label>
+                        <div class="slds-form-element__control">
+                            <lightning:badge label="{!v.selectedPhysician.Specialization__r.Appointment_Price__c}" iconName="utility:moneybag" />
+                        </div>
+                    </div>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </lightning:recordEditForm>
+    <div aura:id="calendar" class="slds-hide">
+        <div id="calendar" class="slds-card" />
+    </div>
+    
+</aura:component>

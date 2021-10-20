@@ -1,0 +1,19 @@
+<apex:page showHeader="false" sidebar="false" lightningStyleSheets="true" controller="CalenderAuthController" action="{!register}">
+    <apex:slds />
+    <apex:outputPanel styleclass="slds" rendered="{!isSuccess}">
+        <section role="alertdialog" tabindex="0" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-theme_success slds-theme_alert-texture">
+                    <h2 class="slds-text-heading_medium" id="prompt-heading-id">Success</h2>
+                    <img style="height: 25em;" src="https://toptal3com-dev-ed.my.salesforce.com/servlet/servlet.ImageServer?id={!$Label.Logo_Document_Id}&oid={!$Organization.Id}" />
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="prompt-message-wrapper">
+                    <b class="slds-align_absolute-center">
+                        Your calendar is now shared to the Medical Clinic.
+                    </b>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </apex:outputPanel>
+</apex:page>
